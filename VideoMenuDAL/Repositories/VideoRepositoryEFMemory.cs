@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using VideoMenuDAL.Context;
+using VideoMenuEntity;
+
+namespace VideoMenuDAL
+{
+    class VideoRepositoryEFMemory : IVideoRepository
+    {
+        InMemoryContext context;
+
+        public VideoRepositoryEFMemory(InMemoryContext context)
+        {
+            this.context = context;
+        }
+        public void CreateVideo(Video v)
+        {
+            context.Videos.Add(v);
+            //Move to UOW later
+            context.SaveChanges();
+        }
+
+        public bool DeleteVideo(int id)
+        {
+            var vid = GetVideoById(id);
+            if (vid != null)
+            {
+                context.Videos.Remove(vid);
+                //Move to UOW later
+                context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public List<Video> GetAllVideos()
+        {
+            return context.Videos.ToList();
+        }
+
+        public Video GetVideoById(int id)
+        {
+            return context.Videos.FirstOrDefault(x => x.Id == id);
+        }
+    }
+}
