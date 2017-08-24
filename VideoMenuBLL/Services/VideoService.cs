@@ -81,6 +81,7 @@ namespace VideoMenuBLL.Services
                 }
                 custFromDB.Name = v.Name;
                 custFromDB.Genre = v.Genre;
+                uow.Complete();
             }
           
         }

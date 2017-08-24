@@ -128,6 +128,7 @@ namespace VideoMenuUI
                 {
                     video.Genre = genre;
                     video.Name = name;
+                    bllFacade.CustomerService.UpdateVideo(video);
                     WriteLine("Video has been updated");
                 }
                 else
@@ -144,7 +145,7 @@ namespace VideoMenuUI
             while (!accept.Equals("y") && !accept.Equals("n"))
             {
                 WriteLine("Input Y for yes or N for no if the information is right or wrong");
-
+                accept = ReadLine().ToLower();
             }
             if (accept.Equals("y"))
             {
