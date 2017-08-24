@@ -18,8 +18,6 @@ namespace VideoMenuDAL
         public void CreateVideo(Video v)
         {
             context.Videos.Add(v);
-            //Move to UOW later
-            context.SaveChanges();
         }
 
         public bool DeleteVideo(int id)
@@ -28,8 +26,6 @@ namespace VideoMenuDAL
             if (vid != null)
             {
                 context.Videos.Remove(vid);
-                //Move to UOW later
-                context.SaveChanges();
                 return true;
             }
             return false;

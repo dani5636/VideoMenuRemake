@@ -9,31 +9,46 @@ namespace VideoMenuBLL.Services
 {
     class VideoService : IVideoService
     {
-        IVideoRepository repo;
-        public VideoService(IVideoRepository repo)
+        DALFacade facade;
+        public VideoService(DALFacade facade)
         {
-            this.repo = repo;
+            this.facade = facade;
         }
         public void CreateVideo(Video v)
         {
-            repo.CreateVideo(v);
+            using (var uow = facade.UnitOfWork) {
+                uow.VideoRepository.CreateVideo(v);
+                uow.Complete();
+            }
 
         }
 
         public bool DeleteVideo(int id)
         {
-            return repo.DeleteVideo(id);
-            
+            using (var uow = facade.UnitOfWork)
+            {
+               var result =  uow.VideoRepository.DeleteVideo(id);
+                uow.Complete();
+                return result;
+            }
         }
 
         public List<Video> GetAllVideos()
         {
-            return repo.GetAllVideos();
+            using (var uow = facade.UnitOfWork)
+            {
+                return uow.VideoRepository.GetAllVideos();
+                
+            }
         }
 
         public Video GetVideoById(int id)
         {
-            return repo.GetVideoById(id);  
+            using (var uow = facade.UnitOfWork)
+            {
+                return uow.VideoRepository.GetVideoById(id);
+
+            }
         }
 
         public List<Video> SearchVideos(string str)
@@ -57,13 +72,17 @@ namespace VideoMenuBLL.Services
 
         public void UpdateVideo(Video v)
         {
-            var custFromDB = GetVideoById(v.Id);
-            if (custFromDB == null) {
-                throw new InvalidOperationException("Customer Not Found");
+            using (var uow = facade.UnitOfWork)
+            {
+                var custFromDB = uow.VideoRepository.GetVideoById(v.Id);
+                if (custFromDB == null)
+                {
+                    throw new InvalidOperationException("Customer Not Found");
+                }
+                custFromDB.Name = v.Name;
+                custFromDB.Genre = v.Genre;
             }
-            custFromDB.Name = v.Name;
-            custFromDB.Genre = v.Genre;
-
+          
         }
     }
 }

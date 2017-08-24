@@ -12,7 +12,7 @@ namespace VideoMenuBLL
         public IVideoService CustomerService
         {
             get
-            { return new VideoService(new DALFacade().VideoRepository);}
+            { return new VideoService(new DALFacade());}
         }
     }
 }
