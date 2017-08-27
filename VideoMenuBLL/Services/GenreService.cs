@@ -7,54 +7,56 @@ using VideoMenuEntity;
 
 namespace VideoMenuBLL.Services
 {
-    class VideoService : IVideoService
+    class GenreService : IGenreService
     {
         DALFacade facade;
-        public VideoService(DALFacade facade)
+        public GenreService(DALFacade facade)
         {
             this.facade = facade;
         }
-        public void CreateVideo(Video v)
-        {
-            using (var uow = facade.UnitOfWork) {
-                uow.VideoRepository.CreateVideo(v);
-                uow.Complete();
-            }
 
+        public bool CreateGenre(Genre g)
+        {
+            bool success = false;
+            using (var uow = facade.UnitOfWork)
+            {
+                if(uow.GenreRepository.GetAllGenres().FirstOrDefault(x => x.Name.ToLower().Equals(g.Name.ToLower())) == null)
+                {
+                    uow.GenreRepository.CreateGenre(g);
+                    success = true;
+                }
+                uow.Complete();
+                return success;
+            }
         }
 
-        public bool DeleteVideo(int id)
+        public bool DeleteGenre(int id)
         {
             using (var uow = facade.UnitOfWork)
             {
-               var result =  uow.VideoRepository.DeleteVideo(id);
+                var result = uow.GenreRepository.DeleteGenre(id);
                 uow.Complete();
                 return result;
             }
         }
 
-        public List<Video> GetAllVideos()
+        public List<Genre> GetAllGenre()
         {
             using (var uow = facade.UnitOfWork)
             {
-                return uow.VideoRepository.GetAllVideos();
-                
+                return uow.GenreRepository.GetAllGenres();
             }
         }
 
-        public Video GetVideoById(int id)
+        public Genre GetGenreById(int id)
         {
-            using (var uow = facade.UnitOfWork)
-            {
-                return uow.VideoRepository.GetVideoById(id);
-
+            using (var uow = facade.UnitOfWork) {
+                return uow.GenreRepository.GetGenreById(id);
             }
         }
 
-        public List<Video> SearchVideos(string str)
+        public List<Genre> SearchGenres(string str)
         {
-
-
             var searchTerm = str.ToLower();
             bool intExist = false;
             int searchId = 0;
@@ -62,29 +64,26 @@ namespace VideoMenuBLL.Services
             {
                 intExist = true;
             }
-            var searchedVideos = GetAllVideos().Where(x =>
+            var searchedVideos = GetAllGenre().Where(x =>
                         x.Name.ToLower().Contains(searchTerm)
-                        || x.Genre.ToLower().Contains(searchTerm)
                         || (intExist && x.Id == searchId)).ToList();
 
-            
+
             return searchedVideos;
         }
 
-        public void UpdateVideo(Video v)
+        public void UpdateGenre(Genre g)
         {
             using (var uow = facade.UnitOfWork)
             {
-                var vidFromDB = uow.VideoRepository.GetVideoById(v.Id);
+                var vidFromDB = uow.GenreRepository.GetGenreById(g.Id);
                 if (vidFromDB == null)
                 {
-                    throw new InvalidOperationException("Video Not Found");
+                    throw new InvalidOperationException("Genre Not Found");
                 }
-                vidFromDB.Name = v.Name;
-                vidFromDB.Genre = v.Genre;
+                vidFromDB.Name = g.Name;
                 uow.Complete();
             }
-          
         }
     }
 }
