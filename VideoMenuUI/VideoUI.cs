@@ -28,7 +28,7 @@ namespace VideoMenuUI
 
             #region Menu Switch
             var selection = ExtraUI.ShowMenu(menuItems);
-            while (selection != 6)
+            while (selection != 7)
             {
                 switch (selection)
                 {
@@ -36,15 +36,18 @@ namespace VideoMenuUI
                         CreateVideo();
                         break;
                     case 2:
-                        ListAllVideos();
+                        CreateMultipleVideos();
                         break;
                     case 3:
-                        UpdateVideo();
+                        ListAllVideos();
                         break;
                     case 4:
-                        DeleteVideo();
+                        UpdateVideo();
                         break;
                     case 5:
+                        DeleteVideo();
+                        break;
+                    case 6:
                         SearchVideos();
                         break;
                 }
@@ -59,6 +62,9 @@ namespace VideoMenuUI
             ReadLine();
 
         }
+
+       
+
         private static void CreateVideo()
         {
             WriteLine("Genre: ");
@@ -83,6 +89,48 @@ namespace VideoMenuUI
             else
             {
                 WriteLine("The video was not added");
+            }
+        }
+        private static void CreateMultipleVideos()
+        {
+            WriteLine("How many videos do you wish to add?");
+            int times;
+            while (!int.TryParse(ReadLine(), out times))
+            {
+                WriteLine("Please input a number");
+            }
+            WriteLine("What is the genre for all of these videos?:");
+            WriteLine("Genre: ");
+            var genre = GenreExistCheck();
+            List<Video> videos = new List<Video>();
+            WriteLine("C to cancel and A to Accept enter all inputted info");
+            bool save = true;
+            for (int i = 0; i < times; i++)
+            {
+                
+                WriteLine("Name: ");
+                var name = ReadLine();
+                if (name.ToLower().Equals("c"))
+                {
+                    save = false;
+                    break;
+                }
+                else if(name.ToLower().Equals("a"))
+                WriteLine("You have inputted the following info:");
+                WriteLine($"Genre: {genre.Name} |Name: {name}");
+                if (ExtraUI.ConfirmInfo())
+                {
+                    videos.Add(new Video { Genre = genre.Name, Name = name });
+                }
+                else
+                {
+                    WriteLine("The video was not added");
+                    i--;
+                }
+            }
+            if (save)
+            {
+                bllFacade.VideoService.CreateMultipleVideos(videos);
             }
         }
         private static void ListAllVideos()
