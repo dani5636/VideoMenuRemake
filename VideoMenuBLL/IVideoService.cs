@@ -9,6 +9,7 @@ namespace VideoMenuBLL
     {
         //C
         void CreateVideo(Video v);
+        void CreateMultipleVideos(List<Video> videos);
         //R
         List<Video> GetAllVideos();
         Video GetVideoById(int id);

@@ -50,9 +50,19 @@ namespace VideoMenuBLL.Services
 
         public Genre GetGenreById(int id)
         {
-            using (var uow = facade.UnitOfWork) {
+            using (var uow = facade.UnitOfWork)
+            {
                 return uow.GenreRepository.GetGenreById(id);
             }
+        }
+        public Genre GetGenreByName(string str)
+        {
+            using (var uow = facade.UnitOfWork)
+            {
+               var genre = uow.GenreRepository.GetAllGenres().FirstOrDefault(x=> x.Name.ToLower().Equals(str.ToLower()));
+               return genre;
+            }
+            
         }
 
         public List<Genre> SearchGenres(string str)

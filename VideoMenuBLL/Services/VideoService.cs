@@ -9,14 +9,27 @@ namespace VideoMenuBLL.Services
 {
     class VideoService : IVideoService
     {
-        DALFacade facade;
+        DALFacade Facade;
         public VideoService(DALFacade facade)
         {
-            this.facade = facade;
+            this.Facade = facade;
         }
+
+        public void CreateMultipleVideos(List<Video> videos)
+        {
+            using (var uow = Facade.UnitOfWork)
+            {
+                foreach (var v in videos)
+                {
+                    uow.VideoRepository.CreateVideo(v);
+                }
+                uow.Complete();
+            }
+        }
+
         public void CreateVideo(Video v)
         {
-            using (var uow = facade.UnitOfWork) {
+            using (var uow = Facade.UnitOfWork) {
                 uow.VideoRepository.CreateVideo(v);
                 uow.Complete();
             }
@@ -25,7 +38,7 @@ namespace VideoMenuBLL.Services
 
         public bool DeleteVideo(int id)
         {
-            using (var uow = facade.UnitOfWork)
+            using (var uow = Facade.UnitOfWork)
             {
                var result =  uow.VideoRepository.DeleteVideo(id);
                 uow.Complete();
@@ -35,7 +48,7 @@ namespace VideoMenuBLL.Services
 
         public List<Video> GetAllVideos()
         {
-            using (var uow = facade.UnitOfWork)
+            using (var uow = Facade.UnitOfWork)
             {
                 return uow.VideoRepository.GetAllVideos();
                 
@@ -44,7 +57,7 @@ namespace VideoMenuBLL.Services
 
         public Video GetVideoById(int id)
         {
-            using (var uow = facade.UnitOfWork)
+            using (var uow = Facade.UnitOfWork)
             {
                 return uow.VideoRepository.GetVideoById(id);
 
@@ -73,7 +86,7 @@ namespace VideoMenuBLL.Services
 
         public void UpdateVideo(Video v)
         {
-            using (var uow = facade.UnitOfWork)
+            using (var uow = Facade.UnitOfWork)
             {
                 var vidFromDB = uow.VideoRepository.GetVideoById(v.Id);
                 if (vidFromDB == null)

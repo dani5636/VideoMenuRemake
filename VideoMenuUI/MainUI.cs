@@ -13,8 +13,9 @@ namespace VideoMenuUI
         static void Main(string[] args)
         {
             //Fills the database with mockdata
+            
+            FillDatabaseWithGenres();
             FillDatabaseWithVideos();
-
             //This should be removed at the end of project
             #region Menu Items
             string[] menuItems =
@@ -71,6 +72,29 @@ namespace VideoMenuUI
             });
 
             #endregion}
+        }
+        private static void FillDatabaseWithGenres()
+        {
+            bllFacade.GenreService.CreateGenre(new Genre
+            {
+                Name = "Horror"
+            });
+            bllFacade.GenreService.CreateGenre(new Genre
+            {
+                Name = "Action"
+            });
+            bllFacade.GenreService.CreateGenre(new Genre
+            {
+                Name = "Drama"
+            });
+            bllFacade.GenreService.CreateGenre(new Genre
+            {
+                Name = "Sci-Fi"
+            });
+            bllFacade.GenreService.CreateGenre(new Genre
+            {
+                Name = "Comedy"
+            });
         }
     }
 }

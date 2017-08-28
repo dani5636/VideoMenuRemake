@@ -16,7 +16,8 @@ namespace VideoMenuUI
             #region Menu Items
             string[] menuItems =
             {
-                "Create a video",
+                "Add a video",
+                "Add multiple videos",
                 "List all videos",
                 "Update a video",
                 "Delete a video",
@@ -58,6 +59,70 @@ namespace VideoMenuUI
             ReadLine();
 
         }
+        private static void CreateVideo()
+        {
+            WriteLine("Genre: ");
+            var genre = GenreExistCheck();
+
+
+            WriteLine("Name: ");
+            var name = ReadLine();
+
+            WriteLine("You have inputted the following info:");
+            WriteLine($"Genre: {genre.Name} |Name: {name}");
+
+            if (ExtraUI.ConfirmInfo())
+            {
+                bllFacade.VideoService.CreateVideo(new Video()
+                {
+                    Genre = genre.Name,
+                    Name = name
+                });
+                WriteLine("Video is now in information");
+            }
+            else
+            {
+                WriteLine("The video was not added");
+            }
+        }
+        private static void ListAllVideos()
+        {
+            foreach (var video in bllFacade.VideoService.GetAllVideos())
+            {
+                WriteLine($"ID: {video.Id} |Genre: {video.Genre} |Name: {video.Name}");
+            }
+        }
+        private static void UpdateVideo()
+        {
+            WriteLine("Which Video would you like to update? (ID)");
+            var video = FindVideoById();
+
+            if (video != null)
+            {
+                WriteLine("You are updating the following video:");
+                WriteLine($"Genre: {video.Genre} |Name: {video.Name}");
+                WriteLine("Genre: ");
+                var genre = GenreExistCheck();
+
+                WriteLine("Name: ");
+                var name = ReadLine();
+
+                WriteLine("You have inputted the following info:");
+                WriteLine($"Genre: {genre.Name} |Name: {name}");
+                if (ExtraUI.ConfirmInfo())
+                {
+                    video.Genre = genre.Name;
+                    video.Name = name;
+                    bllFacade.VideoService.UpdateVideo(video);
+                    WriteLine("Video has been updated");
+                }
+                else
+                {
+                    WriteLine("The video was not updated");
+                }
+            }
+        }
+
 
         private static void DeleteVideo()
         {
@@ -84,42 +149,7 @@ namespace VideoMenuUI
             }
 
         }
-
         
-
-        private static void UpdateVideo()
-        {
-            WriteLine("Which Video would you like to update? (ID)");
-            var video = FindVideoById();
-
-            if (video != null)
-            {
-                WriteLine("You are updating the following video:");
-                WriteLine($"Genre: {video.Genre} |Name: {video.Name}");
-                WriteLine("Genre: ");
-                var genre = ReadLine();
-
-                WriteLine("Name: ");
-                var name = ReadLine();
-
-                WriteLine("You have inputted the following info:");
-                WriteLine($"Genre: {genre} |Name: {name}");
-                if (ExtraUI.ConfirmInfo())
-                {
-                    video.Genre = genre;
-                    video.Name = name;
-                    bllFacade.VideoService.UpdateVideo(video);
-                    WriteLine("Video has been updated");
-                }
-                else
-                {
-                    WriteLine("The video was not updated");
-                }
-            }
-        }
-
-      
-
         private static Video FindVideoById()
         {
             WriteLine("Enter Q to go back to the menu");
@@ -146,39 +176,35 @@ namespace VideoMenuUI
             }
             return null;
         }
-
-        private static void CreateVideo()
-        {
-            WriteLine("Genre: ");
-            var genre = ReadLine();
-
-            WriteLine("Name: ");
-            var name = ReadLine();
-
-            WriteLine("You have inputted the following info:");
-            WriteLine($"Genre: {genre} |Name: {name}");
-
-            if (ExtraUI.ConfirmInfo())
+        private static Genre GenreExistCheck() {
+            bool foundGenre = false;
+            string str = ReadLine();
+            Genre genre = null;
+            while (!foundGenre)
             {
-                bllFacade.VideoService.CreateVideo(new Video()
+                genre = bllFacade.GenreService.GetGenreByName(str);
+                if (genre != null)
                 {
-                    Genre = genre,
-                    Name = name
-                });
-                WriteLine("Video is now in information");
-            }
-            else
-            {
-                WriteLine("The video was not added");
-            }
-        }
+                    return genre;
+                }
+                else
+                {
+                    WriteLine("The genre inputted was not found");
+                    WriteLine($"Do you wish to create a genre named {str}");
 
-        private static void ListAllVideos()
-        {
-            foreach (var video in bllFacade.VideoService.GetAllVideos())
-            {
-                WriteLine($"ID: {video.Id} |Genre: {video.Genre} |Name: {video.Name}");
+                    if (ExtraUI.ConfirmInfo())
+                    {
+                        genre = new Genre { Name = str };
+                        bllFacade.GenreService.CreateGenre(genre);
+                        return genre;
+                    }
+                    else
+                    {
+                    }
+                }
+                str = ReadLine();
             }
+            return null;
         }
 
        

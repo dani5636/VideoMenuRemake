@@ -17,5 +17,6 @@ namespace VideoMenuBLL
         void UpdateGenre(Genre g);
         //D
         bool DeleteGenre(int id);
+        Genre GetGenreByName(string str);
     }
 }

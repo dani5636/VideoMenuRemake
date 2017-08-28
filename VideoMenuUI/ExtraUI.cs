@@ -12,11 +12,11 @@ namespace VideoMenuUI
 
         public static bool ConfirmInfo()
         {
-            WriteLine("is this info correct? (Y/N)");
+            WriteLine("(Y/N)");
             string accept = ReadLine().ToLower();
             while (!accept.Equals("y") && !accept.Equals("n"))
             {
-                WriteLine("Input Y for yes or N for no if the information is right or wrong");
+                WriteLine("Input Y for yes or N for No");
                 accept = ReadLine().ToLower();
             }
             if (accept.Equals("y"))
