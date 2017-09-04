@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VideoMenuBLL;
-using VideoMenuEntity;
+using VideoMenuBLL.BusinessObjects;
 using static System.Console;
 namespace VideoMenuUI
 {
@@ -79,7 +78,7 @@ namespace VideoMenuUI
 
             if (ExtraUI.ConfirmInfo())
             {
-                bllFacade.VideoService.CreateVideo(new Video()
+                bllFacade.VideoService.CreateVideo(new VideoBO()
                 {
                     Genre = genre.Name,
                     Name = name
@@ -102,7 +101,7 @@ namespace VideoMenuUI
             WriteLine("What is the genre for all of these videos?:");
             WriteLine("Genre: ");
             var genre = GenreExistCheck();
-            List<Video> videos = new List<Video>();
+            List<VideoBO> videos = new List<VideoBO>();
             WriteLine("C to cancel and A to Accept enter all inputted info");
             bool save = true;
             for (int i = 0; i < times; i++)
@@ -120,7 +119,7 @@ namespace VideoMenuUI
                 WriteLine($"Genre: {genre.Name} |Name: {name}");
                 if (ExtraUI.ConfirmInfo())
                 {
-                    videos.Add(new Video { Genre = genre.Name, Name = name });
+                    videos.Add(new VideoBO { Genre = genre.Name, Name = name });
                 }
                 else
                 {
@@ -198,10 +197,10 @@ namespace VideoMenuUI
 
         }
         
-        private static Video FindVideoById()
+        private static VideoBO FindVideoById()
         {
             WriteLine("Enter Q to go back to the menu");
-            Video video = null;
+            VideoBO video = null;
             while (video == null)
             {
                 int idSearch;
@@ -224,10 +223,10 @@ namespace VideoMenuUI
             }
             return null;
         }
-        private static Genre GenreExistCheck() {
+        private static GenreBO GenreExistCheck() {
             bool foundGenre = false;
             string str = ReadLine();
-            Genre genre = null;
+            GenreBO genre = null;
             while (!foundGenre)
             {
                 genre = bllFacade.GenreService.GetGenreByName(str);
@@ -242,7 +241,7 @@ namespace VideoMenuUI
 
                     if (ExtraUI.ConfirmInfo())
                     {
-                        genre = new Genre { Name = str };
+                        genre = new GenreBO { Name = str };
                         bllFacade.GenreService.CreateGenre(genre);
                         return genre;
                     }

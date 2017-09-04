@@ -1,36 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using VideoMenuBLL.BusinessObjects;
+using VideoMenuBLL.Converters;
 using VideoMenuDAL;
-using VideoMenuEntity;
 
 namespace VideoMenuBLL.Services
 {
     class VideoService : IVideoService
     {
+        VideoConverter conv = new VideoConverter();
         DALFacade Facade;
         public VideoService(DALFacade facade)
         {
             this.Facade = facade;
         }
 
-        public void CreateMultipleVideos(List<Video> videos)
+        public void CreateMultipleVideos(List<VideoBO> videos)
         {
             using (var uow = Facade.UnitOfWork)
             {
                 foreach (var v in videos)
                 {
-                    uow.VideoRepository.CreateVideo(v);
+                    uow.VideoRepository.CreateVideo(conv.Convert(v));
                 }
                 uow.Complete();
             }
         }
 
-        public void CreateVideo(Video v)
+        public void CreateVideo(VideoBO v)
         {
             using (var uow = Facade.UnitOfWork) {
-                uow.VideoRepository.CreateVideo(v);
+                
+                uow.VideoRepository.CreateVideo(conv.Convert(v));
                 uow.Complete();
             }
 
@@ -46,32 +48,32 @@ namespace VideoMenuBLL.Services
             }
         }
 
-        public List<Video> GetAllVideos()
+        public List<VideoBO> GetAllVideos()
         {
             using (var uow = Facade.UnitOfWork)
             {
-                return uow.VideoRepository.GetAllVideos();
+                //Video -> VideoBO
+                return uow.VideoRepository.GetAllVideos().Select(v => conv.Convert(v)).ToList();
                 
             }
         }
 
-        public Video GetVideoById(int id)
+        public VideoBO GetVideoById(int id)
         {
             using (var uow = Facade.UnitOfWork)
             {
-                return uow.VideoRepository.GetVideoById(id);
+                return conv.Convert(uow.VideoRepository.GetVideoById(id));
 
             }
         }
 
-        public List<Video> SearchVideos(string str)
+        public List<VideoBO> SearchVideos(string str)
         {
 
 
             var searchTerm = str.ToLower();
             bool intExist = false;
-            int searchId = 0;
-            if (int.TryParse(searchTerm, out searchId))
+            if (int.TryParse(searchTerm, out int searchId))
             {
                 intExist = true;
             }
@@ -80,11 +82,11 @@ namespace VideoMenuBLL.Services
                         || x.Genre.ToLower().Contains(searchTerm)
                         || (intExist && x.Id == searchId)).ToList();
 
-            
+
             return searchedVideos;
         }
 
-        public void UpdateVideo(Video v)
+        public void UpdateVideo(VideoBO v)
         {
             using (var uow = Facade.UnitOfWork)
             {
@@ -99,5 +101,6 @@ namespace VideoMenuBLL.Services
             }
           
         }
+        
     }
 }

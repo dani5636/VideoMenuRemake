@@ -1,6 +1,6 @@
 ﻿
 using VideoMenuBLL;
-using VideoMenuEntity;
+using VideoMenuBLL.BusinessObjects;
 using static System.Console;
 
 namespace VideoMenuUI
@@ -102,7 +102,7 @@ namespace VideoMenuUI
                 var name = ReadLine();
 
                 WriteLine("You have inputted the following info:");
-                WriteLine($"Genre: {genre} |Name: {name}");
+                WriteLine($"ID: {genre.Id} |Name: {name}");
                 if (ExtraUI.ConfirmInfo())
                 {
                     genre.Name = name;
@@ -118,10 +118,10 @@ namespace VideoMenuUI
 
        
 
-        private static Genre FindGenreById()
+        private static GenreBO FindGenreById()
         {
             WriteLine("Enter Q to go back to the menu");
-            Genre genre = null;
+            GenreBO genre = null;
             while (genre == null)
             {
                 int idSearch;
@@ -155,11 +155,14 @@ namespace VideoMenuUI
 
             if (ExtraUI.ConfirmInfo())
             {
-                bllFacade.GenreService.CreateGenre(new Genre()
+                if (bllFacade.GenreService.CreateGenre(new GenreBO() { Name = name }))
                 {
-                    Name = name
-                });
-                WriteLine("Genre is now in information");
+                    WriteLine("Genre is now in information");
+                }
+                else
+                {
+                    WriteLine("This genre already exist");
+                }
             }
             else
             {

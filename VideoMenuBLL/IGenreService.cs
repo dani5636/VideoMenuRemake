@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using VideoMenuEntity;
+﻿using System.Collections.Generic;
+using VideoMenuBLL.BusinessObjects;
 
 namespace VideoMenuBLL
 {
     public interface IGenreService
     {
         //C
-        bool CreateGenre(Genre g);
+        bool CreateGenre(GenreBO g);
         //R
-        List<Genre> GetAllGenre();
-        Genre GetGenreById(int id);
-        List<Genre> SearchGenres(string str);
+        List<GenreBO> GetAllGenre();
+        GenreBO GetGenreById(int id);
+        List<GenreBO> SearchGenres(string str);
         //U
-        void UpdateGenre(Genre g);
+        void UpdateGenre(GenreBO g);
         //D
         bool DeleteGenre(int id);
-        Genre GetGenreByName(string str);
+        GenreBO GetGenreByName(string str);
     }
 }

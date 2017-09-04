@@ -2,30 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VideoMenuBLL.BusinessObjects;
+using VideoMenuBLL.Converters;
 using VideoMenuDAL;
-using VideoMenuEntity;
+using VideoMenuDAL.Entities;
 
 namespace VideoMenuBLL.Services
 {
     class GenreService : IGenreService
     {
+        GenreConverter conv = new GenreConverter();
         DALFacade facade;
         public GenreService(DALFacade facade)
         {
             this.facade = facade;
         }
 
-        public bool CreateGenre(Genre g)
+        public bool CreateGenre(GenreBO g)
         {
             bool success = false;
             using (var uow = facade.UnitOfWork)
             {
                 if(uow.GenreRepository.GetAllGenres().FirstOrDefault(x => x.Name.ToLower().Equals(g.Name.ToLower())) == null)
                 {
-                    uow.GenreRepository.CreateGenre(g);
+                    uow.GenreRepository.CreateGenre(conv.Convert(g));
                     success = true;
+                    uow.Complete();
                 }
-                uow.Complete();
                 return success;
             }
         }
@@ -40,37 +43,36 @@ namespace VideoMenuBLL.Services
             }
         }
 
-        public List<Genre> GetAllGenre()
+        public List<GenreBO> GetAllGenre()
         {
             using (var uow = facade.UnitOfWork)
             {
-                return uow.GenreRepository.GetAllGenres();
+                return uow.GenreRepository.GetAllGenres().Select(g => conv.Convert(g)).ToList();
             }
         }
 
-        public Genre GetGenreById(int id)
+        public GenreBO GetGenreById(int id)
         {
             using (var uow = facade.UnitOfWork)
             {
-                return uow.GenreRepository.GetGenreById(id);
+                return conv.Convert(uow.GenreRepository.GetGenreById(id));
             }
         }
-        public Genre GetGenreByName(string str)
+        public GenreBO GetGenreByName(string str)
         {
             using (var uow = facade.UnitOfWork)
             {
                var genre = uow.GenreRepository.GetAllGenres().FirstOrDefault(x=> x.Name.ToLower().Equals(str.ToLower()));
-               return genre;
+               return conv.Convert(genre);
             }
             
         }
 
-        public List<Genre> SearchGenres(string str)
+        public List<GenreBO> SearchGenres(string str)
         {
             var searchTerm = str.ToLower();
             bool intExist = false;
-            int searchId = 0;
-            if (int.TryParse(searchTerm, out searchId))
+            if (int.TryParse(searchTerm, out int searchId))
             {
                 intExist = true;
             }
@@ -82,7 +84,7 @@ namespace VideoMenuBLL.Services
             return searchedVideos;
         }
 
-        public void UpdateGenre(Genre g)
+        public void UpdateGenre(GenreBO g)
         {
             using (var uow = facade.UnitOfWork)
             {
@@ -95,5 +97,7 @@ namespace VideoMenuBLL.Services
                 uow.Complete();
             }
         }
+        
+
     }
 }

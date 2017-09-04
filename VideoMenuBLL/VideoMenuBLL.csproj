@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VideoMenuDAL\VideoMenuDAL.csproj" />
-    <ProjectReference Include="..\VideoMenuEntity\VideoMenuEntity.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using VideoMenuDAL.Context;
-using VideoMenuEntity;
+using VideoMenuDAL.Entities;
 
 namespace VideoMenuDAL
 {

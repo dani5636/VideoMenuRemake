@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace VideoMenuEntity
+namespace VideoMenuBLL.BusinessObjects
 {
-    public class Video
+    public class GenreBO
     {
         public int Id { get; set; }
-        public string Genre { get; set; }
         public string Name { get; set; }
+
     }
 }

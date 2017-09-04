@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using VideoMenuBLL;
-using VideoMenuEntity;
+using VideoMenuBLL.BusinessObjects;
 using static System.Console;
 namespace VideoMenuUI
 {
@@ -53,19 +53,19 @@ namespace VideoMenuUI
         {
             #region Filling Video List
 
-            bllFacade.VideoService.CreateVideo(new Video()
+            bllFacade.VideoService.CreateVideo(new VideoBO
             {
                 Genre = "Horror",
                 Name = "The Ring"
             });
 
 
-            bllFacade.VideoService.CreateVideo(new Video()
+            bllFacade.VideoService.CreateVideo(new VideoBO
             {
                 Genre = "Comedy",
                 Name = "Dr. Doolittle"
             });
-            bllFacade.VideoService.CreateVideo(new Video()
+            bllFacade.VideoService.CreateVideo(new VideoBO
             {
                 Genre = "Action",
                 Name = "Spider Man: Homecoming"
@@ -75,23 +75,23 @@ namespace VideoMenuUI
         }
         private static void FillDatabaseWithGenres()
         {
-            bllFacade.GenreService.CreateGenre(new Genre
+            bllFacade.GenreService.CreateGenre(new GenreBO
             {
                 Name = "Horror"
             });
-            bllFacade.GenreService.CreateGenre(new Genre
+            bllFacade.GenreService.CreateGenre(new GenreBO
             {
                 Name = "Action"
             });
-            bllFacade.GenreService.CreateGenre(new Genre
+            bllFacade.GenreService.CreateGenre(new GenreBO
             {
                 Name = "Drama"
             });
-            bllFacade.GenreService.CreateGenre(new Genre
+            bllFacade.GenreService.CreateGenre(new GenreBO
             {
                 Name = "Sci-Fi"
             });
-            bllFacade.GenreService.CreateGenre(new Genre
+            bllFacade.GenreService.CreateGenre(new GenreBO
             {
                 Name = "Comedy"
             });

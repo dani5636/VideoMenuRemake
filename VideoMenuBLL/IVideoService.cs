@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using VideoMenuEntity;
+using VideoMenuBLL.BusinessObjects;
 
 namespace VideoMenuBLL
 {
    public interface IVideoService
     {
         //C
-        void CreateVideo(Video v);
-        void CreateMultipleVideos(List<Video> videos);
+        void CreateVideo(VideoBO v);
+        void CreateMultipleVideos(List<VideoBO> videos);
         //R
-        List<Video> GetAllVideos();
-        Video GetVideoById(int id);
-        List<Video> SearchVideos(string str);
+        List<VideoBO> GetAllVideos();
+        VideoBO GetVideoById(int id);
+        List<VideoBO> SearchVideos(string str);
         //U
-        void UpdateVideo(Video v);
+        void UpdateVideo(VideoBO v);
         //D
         bool DeleteVideo(int id);
     }
